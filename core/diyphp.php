@@ -14,7 +14,7 @@ class diyphp
 		# 初始化路由
 		$route = new \core\lib\route();
 		$ctrlClass = $route->ctrl;
-		$action = $route->ctrl;
+		$action = $route->action;
 		
 		# 实例化控制器以及调用方法
 		$ctrlFile = APP . '/ctrl/'. $ctrlClass . 'Ctrl.php';
@@ -24,7 +24,7 @@ class diyphp
 			$ctrl = new $ctrlName;
 			$ctrl->$action();
 		} else {
-			throw new Exception("找不到控制器".$ctrlClass);
+			throw new \Exception("controller ".$ctrlClass." not find!");
 		}
 	}
 

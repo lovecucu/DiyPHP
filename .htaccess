@@ -1,14 +1,14 @@
-# nginx隐藏index.php
-location / {
-　　if (!-e $request_filename) {
-　　　　rewrite ^/(.*)$ /index.php?$1 last;
-　　}
-　　index index.html index.htm index.php;
-　　autoindex on;
-} 
+# nginx hide index.php
+# location / {
+#　　if (!-e $request_filename) {
+#　　　　rewrite ^/(.*)$ /index.php?$1 last;
+#　　}
+#　　index index.html index.htm index.php;
+#　　autoindex on;
+# } 
 
-# apache隐藏index.php
- RewriteEngine on
+# apache hide index.php
+RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . index.php

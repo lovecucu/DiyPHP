@@ -5,7 +5,7 @@
  * 2.加载函数库
  * 3.启动框架
  */
-
+header("Content-type:text/html; charset=uft-8");
 # 定义全局常量
 define('DIYPHP', realpath(__DIR__));
 define('CORE', DIYPHP.'/core');
