@@ -11,18 +11,22 @@ class diyphp
 	 */
 	public static function run()
 	{
-		# 初始化路由
+		// log初始化
+		\core\lib\log::init();
+
+		// 初始化路由
 		$route = new \core\lib\route();
 		$ctrlClass = $route->ctrl;
 		$action = $route->action;
 		
-		# 实例化控制器以及调用方法
+		// 实例化控制器以及调用方法
 		$ctrlFile = APP . '/ctrl/'. $ctrlClass . 'Ctrl.php';
 		$ctrlName = MODULE. '\\ctrl\\' . $ctrlClass.'Ctrl';
-		if(file_exists($ctrlFile)) {
+		if (file_exists($ctrlFile)) {
 			include $ctrlFile;
 			$ctrl = new $ctrlName;
 			$ctrl->$action();
+			\core\lib\log::write('ctrl: '.$ctrlClass.'    action: '.$action);
 		} else {
 			throw new \Exception("controller ".$ctrlClass." not find!");
 		}
@@ -35,13 +39,13 @@ class diyphp
 	 */
 	public static function load($class)
 	{
-		# 自动加载类库
+		// 自动加载类库
 		$class = str_replace('\\', '/', $class);
-		if(isset(self::$classMap[$class])) {
+		if (isset(self::$classMap[$class])) {
 			return true;
 		} else {
 			$sFile = DIYPHP . '/' . $class . '.php';
-			if(file_exists($sFile)) {
+			if (is_file($sFile)) {
 				include $sFile;
 				self::$classMap[$class] = $class;
 			} else {
@@ -68,10 +72,16 @@ class diyphp
 	 */
 	public function display($file)
 	{
-		$file = APP . '/views/'.$file;
-		if(file_exists($file)) {
-			extract($this->assign);
-			include $file;
+		$path = APP . '/view/'.$file;
+		if(file_exists($path)) {
+			// 引入twig
+			$loader = new \Twig_Loader_Filesystem(APP . '/view');
+			$twig = new \Twig_Environment($loader, array(
+			    'cache' => DIYPHP . '/log/twig',
+			    'debug' => DEBUG //可无视缓存
+			));
+			// 渲染页面
+			echo $twig->render($file, $this->assign ? $this->assign : array());
 		} 
 	}
 } 

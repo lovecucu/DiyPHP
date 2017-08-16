@@ -1,18 +1,37 @@
 <?php
 namespace core\lib;
+use core\lib\conf;
 
-class model extends \PDO
+class model extends \Medoo\Medoo
 {
 	public function __construct() 
 	{
-		$dsn = 'mysql::host=localhost;dbname=test';
-		$username = 'root';
-		$passwd = 'yd@tt1314';
+		$options = conf::all('database');
+		parent::__construct($options);
+	}
 
-		try {
-			parent::__construct($dsn, $username, $passwd);
-		} catch(\PDOException $e) {
-			p($e->getMessage());	
-		}
+	public function getAll($where=array(), $fields='*')
+	{
+		return $this->select($this->table, $fields, $where);
+	}
+
+	public function getRow($where=array(), $fields='*')
+	{
+		return $this->get($this->table, $fields, $where);
+	}
+
+	public function add($data)
+	{
+		return $this->insert($this->table, $data);
+	}
+
+	public function up($data, $where)
+	{
+		return $this->update($this->table, $data, $where);
+	}
+
+	public function del($where)
+	{
+		return $this->delete($this->table, $where);
 	}
 }
